@@ -1,4 +1,5 @@
 import binascii
+import sys
 
 from NovaApi.ExecuteAction.LocateTracker.location_request import (
     get_location_data_for_device,
@@ -14,7 +15,6 @@ from SpotApi.UploadPrecomputedPublicKeyIds.upload_precomputed_public_key_ids imp
     refresh_custom_trackers,
 )
 
-print("Begun")
 result_hex = request_device_list()
 
 device_list = parse_device_list_protobuf(result_hex)
@@ -22,10 +22,11 @@ device_list = parse_device_list_protobuf(result_hex)
 refresh_custom_trackers(device_list)
 canonic_ids = get_canonic_ids(device_list)
 
-selected_idx = 2
+
+selected_idx = int(sys.argv[1]) - 1
+
 selected_device_name = canonic_ids[selected_idx][0]
 selected_canonic_id = canonic_ids[selected_idx][1]
 
-print("Chose", selected_device_name)
 
 get_location_data_for_device(selected_canonic_id, selected_device_name)

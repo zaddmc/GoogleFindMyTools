@@ -124,37 +124,43 @@ def decrypt_location_response_locations(device_update_protobuf):
             )
             location_time_array.append(wrapped_location)
 
-    print("-" * 40)
-    print("[DecryptLocations] Decrypted Locations:")
 
+    print("[")
     if not location_time_array:
-        print("No locations found.")
+        print("]")
         return
 
-    for loc in location_time_array:
+    mylen = len(location_time_array)
+    for idx,loc in enumerate(location_time_array):
+        print("{")
 
         if loc.status == Common_pb2.Status.SEMANTIC:
-            print(f"Semantic Location: {loc.name}")
-
+            print(f'"Semantic Location": "{loc.name}",')
         else:
-            proto_loc = DeviceUpdate_pb2.Location()
-            proto_loc.ParseFromString(loc.decrypted_location)
+            print(f'"Semantic Location": "None",')
 
-            latitude = proto_loc.latitude / 1e7
-            longitude = proto_loc.longitude / 1e7
-            altitude = proto_loc.altitude
+        proto_loc = DeviceUpdate_pb2.Location()
+        proto_loc.ParseFromString(loc.decrypted_location)
 
-            print(f"Latitude: {latitude}")
-            print(f"Longitude: {longitude}")
-            print(f"Altitude: {altitude}")
-            print(f"Google Maps Link: {create_google_maps_link(latitude, longitude)}")
+        latitude = proto_loc.latitude / 1e7
+        longitude = proto_loc.longitude / 1e7
+        altitude = proto_loc.altitude
+
+        print(f'"Latitude": {latitude},')
+        print(f'"Longitude": {longitude},')
+        print(f'"Altitude": {altitude},')
+        print(f'"Google Maps Link": "{create_google_maps_link(latitude, longitude)}",')
             
-        print(f"Time: {datetime.datetime.fromtimestamp(loc.time).strftime('%Y-%m-%d %H:%M:%S')}")
-        print(f"Status: {loc.status}")
-        print(f"Is Own Report: {loc.is_own_report}")
-        print("-" * 40)
+        print(f'"Time": "{datetime.datetime.fromtimestamp(loc.time).strftime('%Y-%m-%d %H:%M:%S')}",')
+        print(f'"Status": {loc.status}')
+        
+        if idx == mylen-1:
+            print("}")
+        else:
+            print("},")
 
-    pass
+
+    print("]")
 
 
 if __name__ == '__main__':

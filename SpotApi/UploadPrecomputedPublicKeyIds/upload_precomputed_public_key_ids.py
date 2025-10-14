@@ -37,7 +37,6 @@ def refresh_custom_trackers(device_list: DevicesList):
             request.deviceEids.append(new_truncated_ids)
 
     if needs_upload:
-        print("[UploadPrecomputedPublicKeyIds] Updating your registered µC devices...")
         try:
             bytes_data = request.SerializeToString()
             spot_request("UploadPrecomputedPublicKeyIds", bytes_data)
